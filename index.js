@@ -1376,9 +1376,9 @@ Message.prototype.checkAuthentication = function (user, responseCb) {
 Message.prototype.setMsgFlags = function (bitPosition, flag) {
 	if ( this.msgGlobalData && this.msgGlobalData !== undefined && this.msgGlobalData !== null ) {
 		if ( flag ) {
-			this.msgGlobalData.msgFlags = this.msgGlobalData.msgFlags | ( 2 ** bitPosition );
+			this.msgGlobalData.msgFlags = this.msgGlobalData.msgFlags | Math.pow( 2 , bitPosition );
 		} else {
-			this.msgGlobalData.msgFlags = this.msgGlobalData.msgFlags & ( 255 - 2 ** bitPosition );
+			this.msgGlobalData.msgFlags = this.msgGlobalData.msgFlags & Math.pow( 255 - 2 , bitPosition );
 		}
 	}
 }
@@ -4890,6 +4890,9 @@ Subagent.prototype.request = function (pdu, requestVarbinds) {
 		var mibRequest;
 		var handler;
 		var responseVarbindType;
+		if( instanceNode.provider){
+			instanceNode = null;
+		}
 
 		if ( ! instanceNode ) {
 			mibRequest = new MibRequest ({
@@ -4920,8 +4923,6 @@ Subagent.prototype.request = function (pdu, requestVarbinds) {
 		(function (savedIndex) {
 			mibRequest.done = function (error) {
 				if ( error ) {
-					responsePdu.errorStatus = error.errorStatus;
-					responsePdu.errorIndex = error.errorIndex;
 					responseVarbind = {
 						oid: mibRequest.oid,
 						type: ObjectType.Null,
